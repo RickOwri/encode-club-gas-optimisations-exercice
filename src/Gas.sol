@@ -13,10 +13,7 @@ contract GasContract is Ownable {
     bool public isReady = false;
     enum PaymentType {
         Unknown,
-        BasicPayment,
-        Refund,
-        Dividend,
-        GroupPayment
+        BasicPayment
     }
     PaymentType constant defaultPayment = PaymentType.Unknown;
 
