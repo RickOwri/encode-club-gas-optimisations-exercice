@@ -7,7 +7,6 @@ import "./Ownable.sol";
 contract GasContract is Ownable {
     uint256 public paymentCounter = 0;
     mapping(address => uint256) public balances;
-    uint256 public tradePercent = 12;
     address public contractOwner;
     uint256 public tradeMode = 0;
     mapping(address => Payment[]) public payments;
