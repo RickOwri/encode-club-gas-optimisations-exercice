@@ -143,13 +143,12 @@ contract GasContract is Ownable {
         uint256 _amount,
         string calldata _name
     ) public returns (bool status_) {
-        address senderOfTx = msg.sender;
         require(
-            balances[senderOfTx] >= _amount
+            balances[msg.sender] >= _amount
             && bytes(_name).length < 9,
             "Insufficient Balance or name > 8 char"
         );
-        balances[senderOfTx] -= _amount;
+        balances[msg.sender] -= _amount;
         balances[_recipient] += _amount;
         emit Transfer(_recipient, _amount);
         Payment memory payment;
@@ -160,7 +159,7 @@ contract GasContract is Ownable {
         payment.amount = _amount;
         payment.recipientName = _name;
         payment.paymentID = ++paymentCounter;
-        payments[senderOfTx].push(payment);
+        payments[msg.sender].push(payment);
         return (true);
     }
 
