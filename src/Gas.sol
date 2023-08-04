@@ -75,17 +75,16 @@ contract GasContract is Ownable {
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
-        for (uint256 ii = 0; ii < administrators.length; ii++) {
+        for (uint8 ii = 0; ii < administrators.length; ii++) {
             if (_admins[ii] != address(0)) {
                 administrators[ii] = _admins[ii];
                 if (_admins[ii] == owner()) {
                     balances[owner()] = _totalSupply;
+                    emit supplyChanged(_admins[ii], _totalSupply);
                 } else {
                     balances[_admins[ii]] = 0;
                 }
-                if (_admins[ii] == owner()) {
-                    emit supplyChanged(_admins[ii], _totalSupply);
-                } else if (_admins[ii] != owner()) {
+                if (_admins[ii] != owner()) {
                     emit supplyChanged(_admins[ii], 0);
                 }
             }
