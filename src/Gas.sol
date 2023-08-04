@@ -207,18 +207,14 @@ contract GasContract is Ownable {
     {
         require(
             _tier < 255,
-            "Gas Contract - addToWhitelist function -  tier level should not be greater than 255"
+            "tier should be < 255"
         );
         whitelist[_userAddrs] = _tier;
         if (_tier > 3) {
             whitelist[_userAddrs] -= _tier;
             whitelist[_userAddrs] = 3;
-        } else if (_tier == 1) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 1;
         } else if (_tier > 0 && _tier < 3) {
-            whitelist[_userAddrs] -= _tier;
-            whitelist[_userAddrs] = 2;
+            whitelist[_userAddrs] = _tier;
         }
         emit AddedToWhitelist(_userAddrs, _tier);
     }
