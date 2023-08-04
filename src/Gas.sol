@@ -209,11 +209,9 @@ contract GasContract is Ownable {
             _tier < 255,
             "tier should be < 255"
         );
-        whitelist[_userAddrs] = _tier;
         if (_tier > 3) {
-            whitelist[_userAddrs] -= _tier;
             whitelist[_userAddrs] = 3;
-        } else if (_tier > 0 && _tier < 3) {
+        } else if (_tier > 0 && _tier <= 3) {
             whitelist[_userAddrs] = _tier;
         }
         emit AddedToWhitelist(_userAddrs, _tier);
