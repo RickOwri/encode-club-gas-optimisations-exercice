@@ -19,6 +19,6 @@ docs/
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-.github/workflows 
+# .github/workflows 
 
 *lcov.info
