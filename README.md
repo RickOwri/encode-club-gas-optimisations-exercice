@@ -1,5 +1,5 @@
 # GAS OPTIMSATION 
-
+![example workflow](https://github.com/SpiralOutDotEu/GasOptimisationFoundry/actions/workflows/github-actions-demo.yml/badge.svg)
 - Your task is to edit and optimise the Gas.sol contract. 
 - You cannot edit the tests & 
 - All the tests must pass.
