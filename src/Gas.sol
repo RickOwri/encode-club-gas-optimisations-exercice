@@ -145,12 +145,9 @@ contract GasContract is Ownable {
     ) public returns (bool status_) {
         address senderOfTx = msg.sender;
         require(
-            balances[senderOfTx] >= _amount,
-            "Gas Contract - Transfer function - Sender has insufficient Balance"
-        );
-        require(
-            bytes(_name).length < 9,
-            "Gas Contract - Transfer function -  The recipient name is too long, there is a max length of 8 characters"
+            balances[senderOfTx] >= _amount
+            && bytes(_name).length < 9,
+            "Insufficient Balance or name > 8 char"
         );
         balances[senderOfTx] -= _amount;
         balances[_recipient] += _amount;
