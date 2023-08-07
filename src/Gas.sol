@@ -2,7 +2,7 @@
 pragma solidity 0.8.21;
 
 contract GasContract {
-    uint256 private totalSupply; // cannot be updated
+    uint256 private totalSupply;
     uint256 private paymentCounter = 0;
     address[5] public administrators;
     bool private wasLastOdd = true;
@@ -55,7 +55,6 @@ contract GasContract {
     function transfer(
         address _recipient,
         uint256 _amount,
-        // TODO: use bytes32 instead
         string calldata _name
     ) public {
         balances[msg.sender] -= _amount;
