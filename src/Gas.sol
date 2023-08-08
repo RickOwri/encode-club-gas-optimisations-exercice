@@ -3,18 +3,22 @@ pragma solidity 0.8.21;
 
 contract GasContract {
     uint256 private totalSupply;
+
+
+    // address[5] public administrators2;
+
+    mapping(address => bool) public s_admins;
+
     bool private wasLastOdd = true;
-
-
-    mapping(address => bool) public admins;
     
     mapping(uint8 => address) public administrators;
-    
-    mapping(address => uint256) public balances;
-    mapping(address => uint256) public whitelist;
-    mapping(address => bool) private isOddWhitelistUser;
-    mapping(address => ImportantStruct) private whiteListStruct;
 
+    mapping(address => uint256) public balances;
+    
+    mapping(address => uint256) public whitelist;
+
+    mapping(address => ImportantStruct) private whiteListStruct;
+    
     struct ImportantStruct {
         uint256 amount;
         bool paymentStatus;
@@ -26,23 +30,21 @@ contract GasContract {
     event WhiteListTransfer(address indexed);
 
     constructor(address[] memory _admins, uint256 _totalSupply) {
-        // totalSupply = _totalSupply;
-
+        
         for (uint8 ii = 0; ii < _admins.length; ii++) {
-            if (_admins[ii] != address(0)) {
-                admins[_admins[ii]]=true;
-                if (_admins[ii] == msg.sender) {
+            address admin1 = _admins[ii];
+            if (admin1 != address(0)) {
+                s_admins[admin1]=true; // persist
+                administrators[ii]=admin1; // persist
+                if (administrators[ii] == msg.sender) {
                     balances[msg.sender] = _totalSupply;
                 }         
             }
         }
     }
 
-    function checkForAdmin(address _user, uint8 i) public view returns (bool _admin) {
-        if (admins[_user]=true) {
-            administrators[i]=_user;
-            return true;
-        }
+    function checkForAdmin(address _user) public view returns (bool _admin) {
+        return s_admins[_user];
     }
 
     function balanceOf(address _user) external view returns (uint256 balance_) {
@@ -53,11 +55,10 @@ contract GasContract {
         address _recipient,
         uint256 _amount,
         string calldata _name
-    ) public {
+    ) public {        
         balances[msg.sender] -= _amount;
         balances[_recipient] += _amount;
     }
-
 
     function addToWhitelist(address _userAddrs, uint256 _tier) external {
         // keep
