@@ -3,12 +3,13 @@ pragma solidity 0.8.21;
 
 contract GasContract {
     uint256 private totalSupply;
-    uint256 private paymentCounter = 0;
-    // address[5] public administrators;
     bool private wasLastOdd = true;
 
+
     mapping(address => bool) public admins;
-        
+    
+    mapping(uint8 => address) public administrators;
+    
     mapping(address => uint256) public balances;
     mapping(address => uint256) public whitelist;
     mapping(address => bool) private isOddWhitelistUser;
@@ -24,39 +25,24 @@ contract GasContract {
     event supplyChanged(address indexed, uint256 indexed);
     event WhiteListTransfer(address indexed);
 
-    constructor(address admins, uint _totalSupply) {
+    constructor(address[] memory _admins, uint256 _totalSupply) {
+        // totalSupply = _totalSupply;
 
-    }
-
-    // constructor(address[] memory _admins, uint256 _totalSupply) {
-    //     totalSupply = _totalSupply;
-        
-        
-    //     // Ensure the _admins array length is not greater than administrators length
-    //     uint256 numAdmins = _admins.length;
-    //     if (numAdmins > administrators.length) {
-    //         numAdmins = administrators.length;
-    //     }
-
-    //     for (uint256 ii = 0; ii < numAdmins; ii++) {
-    //         address admin = _admins[ii];
-    //         if (admin != address(0)) {
-    //             administrators[ii] = admin;
-    //             if (admin == msg.sender) {
-    //                 balances[msg.sender] = _totalSupply;
-    //             }
-    //         }
-    //     }
-    // }
-
-
-    function checkForAdmin(address _user) public view returns (bool admin_) {
-        for (uint256 ii = 0; ii < administrators.length; ii++) {
-            if (administrators[ii] == _user) {
-                return true;
+        for (uint8 ii = 0; ii < _admins.length; ii++) {
+            if (_admins[ii] != address(0)) {
+                admins[_admins[ii]]=true;
+                if (_admins[ii] == msg.sender) {
+                    balances[msg.sender] = _totalSupply;
+                }         
             }
         }
-        return false;
+    }
+
+    function checkForAdmin(address _user, uint8 i) public view returns (bool _admin) {
+        if (admins[_user]=true) {
+            administrators[i]=_user;
+            return true;
+        }
     }
 
     function balanceOf(address _user) external view returns (uint256 balance_) {
@@ -71,6 +57,7 @@ contract GasContract {
         balances[msg.sender] -= _amount;
         balances[_recipient] += _amount;
     }
+
 
     function addToWhitelist(address _userAddrs, uint256 _tier) external {
         // keep
@@ -88,13 +75,16 @@ contract GasContract {
         emit AddedToWhitelist(_userAddrs, _tier);
     }
 
-    function whiteTransfer(address _recipient, uint256 _amount) external {
+    function whiteTransfer(
+        address _recipient,
+        uint256 _amount
+    ) external {
         whiteListStruct[msg.sender] = ImportantStruct(
             _amount,
             true,
             msg.sender
         );
-
+        
         balances[msg.sender] -= (_amount - whitelist[msg.sender]);
         balances[_recipient] += (_amount - whitelist[msg.sender]);
 
